@@ -10,7 +10,7 @@ class Populator
                 // $values = logic->getDHvalues()
                 $task['description'] = preg_replace('/(\$)\d+/i', 'DH_VALUE',$task['description']);
             default:
-                $task['description'] = preg_replace('/(\$)\d+/i', 'DEFAULT',$task['description']);
+                $task['description'] = preg_replace('/(\$)\d+/i', 'VAR_DEFAULT',$task['description']);
             break;
         }
         return $task;

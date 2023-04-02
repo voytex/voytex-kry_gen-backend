@@ -89,8 +89,57 @@ class TaskController extends BaseControler
             );
         }
 
-
     }
+
+    public function getRandomTask()
+    {
+        $strErrorDesc = "";
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $arrQueryStringParams = $this->getQueryStringParams();   
+
+        if (strtoupper($requestMethod) != "GET")
+        {
+            $strErrorDesc = "Not supported request method";
+            $strErrorHeader = "HTTP/1.1 422 Unprocessable Entity";
+        }
+
+        try
+        {
+            $taskModel = new TaskModel();
+            $populator = new Populator();
+            // if (isset($arrQueryStringParams['code']) && $arrQueryStringParams['code'])
+            // {
+            //     $code = $arrQueryStringParams['code'];
+            // }
+
+            $task = $taskModel->getRandomTask();
+            $task = $populator->populateTask($task[0]);
+            $responseData = json_encode($task);
+        }
+        catch (Exception $e)
+        {
+            $strErrorDesc = $e->getMessage() . "Something in getTask() method went wrong.";
+            $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            throw new Error("Something went wrong in getTask() method.");
+        }
+
+        if (!$strErrorDesc)
+        {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        }
+        else 
+        {
+            $this->sendOutput(
+                json_encode(array('error' => $strErrorDesc)),
+                array('Content-Type: application/json'.$strErrorHeader)
+            );
+        }
+    }
+
+
     // public function listAction()
     // {
     //     $strErrorDesc = '';

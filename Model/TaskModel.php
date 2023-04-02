@@ -12,4 +12,9 @@ class TaskModel extends Database
     {
         return $this->select("SELECT * FROM `mpckrygr14`.`tasks` WHERE `code` = ?", ["s", $code]);
     }
+
+    public function getRandomTask()
+    {
+        return $this->select("SELECT * FROM `mpckrygr14`.`tasks` ORDER BY RAND() LIMIT 1", []);
+    }
 }
